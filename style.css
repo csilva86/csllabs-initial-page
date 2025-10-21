@@ -1,0 +1,25 @@
+html {
+    background-image: url("anime-style-clouds.jpg");
+    background-color: #090542;
+    height: 500px; /* You must set a specified height */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+header .logo .logoIMG{
+    height: 39px;
+    width: 275px;
+}
