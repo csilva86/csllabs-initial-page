@@ -1,13 +1,24 @@
-html {
+/* html {
     background-image: url("anime-style-clouds.jpg");
-    background-color: #090542;
-    height: 500px; /* You must set a specified height */
-    background-position: center; /* Center the image */
-    background-repeat: no-repeat; /* Do not repeat the image */
-    background-size: cover; /* Resize the background image to cover the entire container */
+    background-color: #090542; */
+    /*height: 500px;  You must set a specified height */
+    /*background-position: center; Center the image */
+    /*background-repeat: no-repeat; Do not repeat the image */
+    /*background-size: cover; Resize the background image to cover the entire container */
+/* } */
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Popins', sans-serif;
 }
 
-header {
+body {
+    background: #081b29;
+    color: #ededed;
+}
+
+.header {
     position: absolute;
     top: 0;
     left: 0;
@@ -16,10 +27,30 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 100;
 }
 
+.navbar a {
+    font-size: 18px;
+    color: #ededed;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 35px;
+    transition: .4s;
+}
+
+.navbar a:hover{
+    color: aqua;
+}
 
 header .logo .logoIMG{
     height: 39px;
     width: 275px;
+}
+
+.home {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
 }
