@@ -4,7 +4,7 @@ Site oficial da marca CSLLABS, publicado com GitHub Pages em **csllabs.com**.
 
 O site é uma estação de trem futurista em 2D: o visitante vê o trem chegando à plataforma, embarca, e dentro do vagão usa o mapa da linha para viajar entre as estações (Home, About Us, Developments, Videos e Contact). Cada estação é uma seção do site. Não há dependências nem etapa de build: são apenas arquivos estáticos.
 
-Versão atual: **2.0.0** (veja o [CHANGELOG](CHANGELOG.md)).
+Versão atual: **2.3.0** (veja o [CHANGELOG](CHANGELOG.md)).
 
 ## Estrutura
 
@@ -15,6 +15,7 @@ js/app.js                  comportamento: trem, mapa, viagem, som
 img/logo.png               logo exibido no site
 img/favicon-64.png         ícone da aba do navegador
 img/apple-touch-icon.png   ícone para a tela inicial do celular
+img/og-image.png           imagem de pré-visualização ao compartilhar o link (1200×630)
 CNAME                      domínio personalizado (mantido pelo GitHub Pages)
 docs/                      documentação (domínio/DNS e como publicar)
 ```
@@ -22,6 +23,7 @@ docs/                      documentação (domínio/DNS e como publicar)
 ## O que editar para...
 
 - **Mudar o texto de uma estação:** `index.html`, procure o comentário `STATION 0X` e edite o bloco `<article class="card">`.
+- **Adicionar ou editar uma tecnologia em Developments:** `index.html`, procure o comentário `TECHNOLOGIES`. Cada tecnologia é um bloco `<div class="tech">`: copie um, troque a cor (`--t`), o ícone, o nome, o texto e as etiquetas.
 - **Trocar o e-mail de contato:** `js/app.js`, linha `var CONTACT_EMAIL`.
 - **Trocar o logo:** substitua `img/logo.png` por outro arquivo com o mesmo nome.
 - **Mudar nome ou cor de uma estação no mapa:** `js/app.js`, lista `STATIONS`.
@@ -48,3 +50,8 @@ Veja [docs/DOMINIO-E-DNS.md](docs/DOMINIO-E-DNS.md).
 - Botão "Skip intro", navegação por teclado (setas) e links diretos por estação (`/#about-us`, `/#contact`...).
 - Respeita a opção de animações reduzidas do sistema operacional.
 - Layout adaptado para celular em pé.
+
+## Créditos
+
+- Os ícones da Salesforce, Solidity e AWS vêm do projeto [Devicon](https://devicon.dev) (licença MIT). O ícone do Claude Code é um desenho próprio (terminal), sem usar o logotipo oficial.
+- Salesforce, Solidity, Amazon Web Services (AWS) e Claude são marcas de seus respectivos titulares. Este site não é afiliado nem endossado por eles. Use as marcas conforme as diretrizes oficiais de cada empresa.

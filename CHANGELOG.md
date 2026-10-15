@@ -2,6 +2,50 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões numeradas como `MAIOR.MENOR.CORREÇÃO`.
 
+## [2.3.0] — 15/10/2026
+
+Revisão de interface (acessibilidade, legibilidade e acabamento), baseada nas diretrizes "Web Interface Guidelines" e nas boas práticas de polimento de interface. O visual não mudou.
+
+### Adicionado
+- Imagem de pré-visualização `img/og-image.png` (1200×630) e metadados `og:image`, `og:url`, `twitter:card` e `canonical`: ao compartilhar o link (WhatsApp, LinkedIn, etc.) aparece uma prévia com o logo.
+- `color-scheme: dark` (CSS e meta), `overscroll-behavior` e `touch-action: manipulation` (sem atraso de toque e sem "bounce" da página).
+- Feedback de clique: botões encolhem levemente ao serem pressionados.
+
+### Alterado
+- Estações do mapa: área de toque ampliada (antes 16×16 px; agora cerca de 44 px) e o **nome da estação** passou a ser clicável também.
+- Legibilidade: textos de 7–9 px passaram para 9–11 px no mínimo; rodapé e rótulo do painel com mais contraste.
+- Títulos com `text-wrap: balance` e parágrafos com `text-wrap: pretty` (sem palavras soltas na última linha); suavização de fonte (macOS).
+- O painel LED do topo deixou de ser anunciado por leitores de tela (a informação já é anunciada pela região "aria-live"), evitando repetição.
+- `?v=` dos arquivos aumentado para 5.
+
+## [2.2.1] — 15/10/2026
+
+### Corrigido
+- Estação **Developments**: os rótulos "Technology 0X · In use" dos cartões agora ficam alinhados no topo (antes, o texto era centralizado na vertical e os cartões com menos texto ficavam com o rótulo mais abaixo). `?v=` aumentado para 4.
+
+## [2.2.0] — 15/10/2026
+
+### Adicionado
+- Estação **Developments**: três novas tecnologias — **Claude Code**, **Solidity** e **AWS** — cada uma com ícone neon e cor própria (laranja-coral, roxo e âmbar).
+- O ícone do Claude Code é um desenho próprio de terminal (o Devicon não tem ícone dele). Os de Solidity e AWS vêm do Devicon.
+
+### Alterado
+- Os cartões de tecnologia agora formam uma grade de 2×2 no computador (1 coluna no celular) e todos têm o mesmo estilo; a cor de cada um é definida por `--t` no próprio bloco.
+- Os dois espaços reservados "Technology 02/03" foram substituídos pelas tecnologias reais.
+- `?v=` dos arquivos aumentado para 3.
+- README: créditos e instruções de como adicionar uma tecnologia atualizados.
+
+## [2.1.0] — 15/10/2026
+
+### Adicionado
+- Estação **Developments**: cartão da primeira tecnologia, **Salesforce** (Apex, Lightning Web Components, SOQL e integrações), com o ícone do Devicon estilizado em neon (contorno brilhante e leve cintilação; sem animação para quem prefere movimento reduzido).
+- Estrutura de "cartões de tecnologia" pronta para receber as próximas (dois espaços reservados "Technology 02" e "Technology 03").
+- Seção "Créditos" no README (Devicon, licença MIT, e aviso sobre a marca Salesforce).
+
+### Alterado
+- Os três cartões censurados "Project 01–03" foram substituídos pelos cartões de tecnologia. O texto da estação agora diz: "The technologies we build with. Project details stay classified until launch."
+- Números de versão dos arquivos em `index.html` aumentados para `?v=2` (força os navegadores a carregarem o CSS novo).
+
 ## [2.0.0] — 06/10/2026
 
 Redesenho completo da home: a página única de teaser virou uma estação de trem interativa.
