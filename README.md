@@ -4,13 +4,15 @@ Site oficial da marca CSLLABS, publicado com GitHub Pages em **csllabs.com**.
 
 O site é uma estação de trem futurista em 2D: o visitante vê o trem chegando à plataforma, embarca, e dentro do vagão usa o mapa da linha para viajar entre as estações (Home, About Us, Developments, Videos e Contact). Cada estação é uma seção do site. Não há dependências nem etapa de build: são apenas arquivos estáticos.
 
-Versão atual: **2.3.0** (veja o [CHANGELOG](CHANGELOG.md)).
+Versão atual: **2.5.0** (veja o [CHANGELOG](CHANGELOG.md)).
 
 ## Estrutura
 
 ```
 index.html                 estrutura da página e os TEXTOS de cada estação
 css/style.css              visual: cores, tamanhos, animações
+salesforce.html            página "Salesforce Projects" (corredor da estação) com os projetos e links do GitHub
+css/concourse.css          visual da página do corredor
 js/app.js                  comportamento: trem, mapa, viagem, som
 img/logo.png               logo exibido no site
 img/favicon-64.png         ícone da aba do navegador
@@ -24,6 +26,7 @@ docs/                      documentação (domínio/DNS e como publicar)
 
 - **Mudar o texto de uma estação:** `index.html`, procure o comentário `STATION 0X` e edite o bloco `<article class="card">`.
 - **Adicionar ou editar uma tecnologia em Developments:** `index.html`, procure o comentário `TECHNOLOGIES`. Cada tecnologia é um bloco `<div class="tech">`: copie um, troque a cor (`--t`), o ícone, o nome, o texto e as etiquetas.
+- **Adicionar um projeto Salesforce:** abra `salesforce.html`, copie o bloco `<article class="door">` inteiro (comentário `PROJECT 01`), troque o número, o nome, a descrição, o `owner/repositório`, as etiquetas e o link do GitHub (`href`). Cada projeto novo ocupa uma "porta" do corredor; as portas lacradas (Project 02/03) podem ser apagadas ou viradas projetos reais.
 - **Trocar o e-mail de contato:** `js/app.js`, linha `var CONTACT_EMAIL`.
 - **Trocar o logo:** substitua `img/logo.png` por outro arquivo com o mesmo nome.
 - **Mudar nome ou cor de uma estação no mapa:** `js/app.js`, lista `STATIONS`.

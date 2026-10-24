@@ -249,6 +249,13 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .tech h3{margin:.4em 0 .3em;font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(14px,1.6vw,19px);letter-spacing:.18em;text-transform:uppercase;color:#fff;
   text-shadow:0 0 6px rgba(255,255,255,.7),0 0 14px var(--t),0 0 28px var(--t)}
 .tech p{margin:0 0 .6em;font-size:clamp(12.5px,1.15vw,15px);line-height:1.38;color:#b9cde6}
+.tech-link{color:inherit;text-decoration:none;cursor:pointer;position:relative;
+  transition-property:translate,box-shadow,border-color,background-color;transition-duration:.2s;transition-timing-function:ease-out}
+.tech-link:hover{translate:0 -2px;border-color:var(--t);box-shadow:0 0 34px -8px var(--t),inset 0 0 28px -14px var(--t)}
+.tech-link:active{translate:0 0}
+.go{display:inline-flex;align-items:center;gap:.6em;margin-top:.75em;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--t)}
+.go svg{width:1.5em;height:1.5em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:translate .2s ease-out}
+.tech-link:hover .go svg{translate:4px 0}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips span{padding:3px 8px;border:1px solid color-mix(in srgb,var(--t) 55%,transparent);border-radius:999px;
   font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--t);background:color-mix(in srgb,var(--t) 8%,transparent)}
