@@ -2,6 +2,27 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões numeradas como `MAIOR.MENOR.CORREÇÃO`.
 
+## [2.5.0] — 24/10/2026
+
+### Alterado
+- Página **Salesforce Projects**: a porta do **DigiLibrary** agora tem a descrição real do projeto (em inglês): um app Salesforce para gerenciar uma biblioteca digital corporativa, criado para um desafio de desenvolvedor Apex, com integração à API pública Open Library.
+- A tela da porta ganhou duas listas: **What it does** (busca por título/autor no catálogo e na Open Library, importação com um clique, empréstimo com bloqueio quando não há cópias, listas ao vivo na Home, devolução apagando o empréstimo) e **Under the hood** (contagem de cópias correta em lote, limite de empréstimos validado no servidor, busca que continua funcionando se a Open Library estiver fora do ar).
+- Etiquetas do projeto: Salesforce, **Apex**, Salesforce DX e **Open Library API** (antes: só Salesforce e Salesforce DX).
+- A porta do projeto ficou mais larga (até 560 px) para comportar o texto, e as portas lacradas acompanham a mesma altura.
+- Descrição da página (`meta description`) atualizada. `concourse.css` agora em `?v=2`.
+
+## [2.4.0] — 24/10/2026
+
+### Adicionado
+- Nova página **`salesforce.html` ("Salesforce Projects")**: um corredor de estação de trem (teto com luminárias, parede com colunas, piso em perspectiva) em que cada projeto é uma porta com sua tela de informações: nome, descrição, repositório, tecnologias e botão "View on GitHub" (abre em nova aba).
+- Primeiro projeto: **DigiLibrary** → https://github.com/csilva86/DigiLibrary/ (descrição provisória; o repositório ainda não tem descrição pública).
+- Duas portas lacradas ("Project 02/03") indicam projetos futuros.
+- Botão "Back to the train" que volta direto para a estação Developments.
+
+### Alterado
+- Na estação Developments, o cartão **Salesforce** virou um link para a nova página (com a chamada "Enter the concourse" e efeito ao passar o mouse). O texto da estação agora diz "Open Salesforce to explore its projects."
+- `?v=` do `style.css`/`app.js` aumentado para 6.
+
 ## [2.3.0] — 15/10/2026
 
 Revisão de interface (acessibilidade, legibilidade e acabamento), baseada nas diretrizes "Web Interface Guidelines" e nas boas práticas de polimento de interface. O visual não mudou.

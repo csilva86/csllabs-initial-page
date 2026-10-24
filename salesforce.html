@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Salesforce Projects — CSLLABS</title>
+<meta name="description" content="Salesforce projects by CSLLABS. DigiLibrary: a digital library app with book search, Open Library import and loan control, built with Apex.">
+<meta name="theme-color" content="#05030a">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://csllabs.com/salesforce.html">
+<meta property="og:title" content="Salesforce Projects — CSLLABS">
+<meta property="og:description" content="Salesforce projects by CSLLABS, with links to the GitHub repositories.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://csllabs.com/salesforce.html">
+<meta property="og:image" content="https://csllabs.com/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="64x64" href="img/favicon-64.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
+<!-- When you change concourse.css, raise the ?v= number so browsers load the new version -->
+<link rel="stylesheet" href="css/concourse.css?v=2">
+</head>
+<body>
+<div class="scene">
+
+  <header class="top">
+    <a class="back" href="index.html#developments">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6"/></svg>
+      <span>Back to the train</span>
+    </a>
+    <a class="logo" href="index.html" aria-label="CSLLABS home"><img src="img/logo.png" alt="CSLLABS" width="834" height="110"></a>
+    <p class="where">Station 03 · Developments</p>
+  </header>
+
+  <!-- ceiling with light strips -->
+  <div class="ceiling" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+  <main id="main">
+    <div class="sign">
+      <p class="eyebrow">Concourse · Level S</p>
+      <h1>Salesforce Projects</h1>
+      <p class="lead">Every door leads to a project on the Salesforce platform. Step through to read the code on GitHub.</p>
+    </div>
+
+    <!-- The hall: one <article class="door"> per project. -->
+    <section class="hall" aria-label="Salesforce projects" tabindex="0">
+
+      <!-- ===== PROJECT 01 ===== (to add a project: copy this whole <article> block, change the texts and the link) -->
+      <article class="door wide" aria-labelledby="p1">
+        <div class="no">Project 01</div>
+        <div class="frame">
+          <div class="screen">
+            <p class="kind">Salesforce · Apex · GitHub</p>
+            <h2 id="p1">DigiLibrary</h2>
+            <p class="desc">A Salesforce app for managing a corporate digital library: which books exist, how many copies are available and who has one on loan. Built for an Apex developer challenge, with an extra integration with the public Open Library API.</p>
+
+            <h3 class="sub">What it does</h3>
+            <ul class="feats">
+              <li><b>Search</b> by title or author in the library catalogue and on Open Library at the same time.</li>
+              <li><b>Import</b> a book found only on Open Library into the catalogue with one click.</li>
+              <li><b>Loan</b> any book with a copy available. With no copies left, the request fails with a clear message.</li>
+              <li><b>Follow</b> the catalogue and the active loans in two live lists on the Home page.</li>
+              <li><b>Return</b> a book by deleting its loan: the copy goes back into circulation right away.</li>
+            </ul>
+
+            <h3 class="sub">Under the hood</h3>
+            <ul class="feats">
+              <li>Each book keeps its total and available copies, correct even when many loans are created or removed in one batch.</li>
+              <li>The loan limit is enforced on the server, so the interface cannot bypass it.</li>
+              <li>If Open Library is slow or offline, search keeps working with the local catalogue.</li>
+            </ul>
+
+            <p class="repo"><span class="sr">Repository: </span>csilva86/DigiLibrary</p>
+            <ul class="chips" aria-label="Technologies">
+              <li>Salesforce</li><li>Apex</li><li>Salesforce DX</li><li>Open Library API</li>
+            </ul>
+            <a class="cta" href="https://github.com/csilva86/DigiLibrary/" target="_blank" rel="noopener noreferrer">
+              <span>View on GitHub<span class="sr"> (opens in a new tab)</span></span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+          <div class="leaf l" aria-hidden="true"></div><div class="leaf r" aria-hidden="true"></div>
+        </div>
+      </article>
+
+      <!-- ===== sealed doors: projects still to come (delete them or turn them into real projects) ===== -->
+      <div class="door sealed" aria-hidden="true">
+        <div class="no">Project 02</div>
+        <div class="frame"><div class="screen"><p class="kind">Next project</p><i class="redact" style="width:70%"></i><i class="redact" style="width:48%"></i><i class="redact" style="width:82%"></i></div>
+          <div class="leaf l"></div><div class="leaf r"></div></div>
+      </div>
+      <div class="door sealed" aria-hidden="true">
+        <div class="no">Project 03</div>
+        <div class="frame"><div class="screen"><p class="kind">Next project</p><i class="redact" style="width:62%"></i><i class="redact" style="width:80%"></i><i class="redact" style="width:44%"></i></div>
+          <div class="leaf l"></div><div class="leaf r"></div></div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- floor in perspective -->
+  <div class="floor" aria-hidden="true"><div class="grid"></div></div>
+  <footer class="foot"><small>© CSLLABS</small></footer>
+</div>
+</body>
+</html>
