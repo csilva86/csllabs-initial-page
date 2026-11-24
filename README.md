@@ -2,9 +2,9 @@
 
 Site oficial da marca CSLLABS, publicado com GitHub Pages em **csllabs.com**.
 
-O site é uma estação de trem futurista em 2D: o visitante vê o trem chegando à plataforma, embarca, e dentro do vagão usa o mapa da linha para viajar entre as estações (Home, About Us, Developments, Videos e Contact). Cada estação é uma seção do site. Não há dependências nem etapa de build: são apenas arquivos estáticos.
+O site é uma estação de trem futurista em 2D: o visitante vê o trem chegando à plataforma, embarca, e dentro do vagão usa o mapa da linha para viajar entre as estações (Home, About, Developments e Contact; a estação Videos está desligada até existir o primeiro vídeo). Cada estação é uma seção do site. Não há dependências nem etapa de build: são apenas arquivos estáticos.
 
-Versão atual: **2.5.0** (veja o [CHANGELOG](CHANGELOG.md)).
+Versão atual: **2.9.0** (veja o [CHANGELOG](CHANGELOG.md)).
 
 ## Estrutura
 
@@ -26,10 +26,12 @@ docs/                      documentação (domínio/DNS e como publicar)
 
 - **Mudar o texto de uma estação:** `index.html`, procure o comentário `STATION 0X` e edite o bloco `<article class="card">`.
 - **Adicionar ou editar uma tecnologia em Developments:** `index.html`, procure o comentário `TECHNOLOGIES`. Cada tecnologia é um bloco `<div class="tech">`: copie um, troque a cor (`--t`), o ícone, o nome, o texto e as etiquetas.
-- **Adicionar um projeto Salesforce:** abra `salesforce.html`, copie o bloco `<article class="door">` inteiro (comentário `PROJECT 01`), troque o número, o nome, a descrição, o `owner/repositório`, as etiquetas e o link do GitHub (`href`). Cada projeto novo ocupa uma "porta" do corredor; as portas lacradas (Project 02/03) podem ser apagadas ou viradas projetos reais.
+- **Adicionar um projeto Salesforce:** abra `salesforce.html`, copie o bloco `<article class="door">` inteiro (comentário `PROJECT 01`), troque o número, o nome, a descrição, o `owner/repositório`, as etiquetas e o link do GitHub (`href`). Cada projeto novo ocupa uma "porta" do corredor; a porta lacrada (Project 03) pode ser apagada ou virar um projeto real.
 - **Trocar o e-mail de contato:** `js/app.js`, linha `var CONTACT_EMAIL`.
 - **Trocar o logo:** substitua `img/logo.png` por outro arquivo com o mesmo nome.
 - **Mudar nome ou cor de uma estação no mapa:** `js/app.js`, lista `STATIONS`.
+- **Religar a estação Videos:** siga o comentário `STATION · VIDEOS` no `index.html` e descomente a linha `videos` em `STATIONS` (`js/app.js`).
+- **Botão que leva a outra estação:** use `<button type="button" class="btn" data-go="contact">` (troque `contact` pelo id da estação).
 - **Mudar cores gerais e tamanhos:** `css/style.css`, bloco `:root` no topo.
 
 Depois de alterar `css/style.css` ou `js/app.js`, aumente o número em `?v=1` no `index.html` (`?v=2`, `?v=3`...) para que os visitantes recebam a versão nova em vez da guardada no cache do navegador.
@@ -50,7 +52,9 @@ Veja [docs/DOMINIO-E-DNS.md](docs/DOMINIO-E-DNS.md).
 
 - Animações em CSS e canvas, sem bibliotecas externas (apenas as fontes Orbitron e Rajdhani, do Google Fonts).
 - Som opcional (gerado por código, começa desligado).
-- Botão "Skip intro", navegação por teclado (setas) e links diretos por estação (`/#about-us`, `/#contact`...).
+- Primeira viagem completa; depois, viagens expressas (cerca de 2 s). Clicar no vagão ou apertar Enter/Espaço/Esc durante a viagem pula para a chegada.
+- **Ajustar a velocidade:** `js/app.js`, função `go()` (tempos com `fast ? ... : ...`) e `runTravel()` (variável `T`).
+- Botão "Skip intro", navegação por teclado (setas) e links diretos por estação (`/#about-us`, `/#developments`, `/#contact`).
 - Respeita a opção de animações reduzidas do sistema operacional.
 - Layout adaptado para celular em pé.
 
