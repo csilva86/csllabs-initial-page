@@ -2,6 +2,76 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Versões numeradas como `MAIOR.MENOR.CORREÇÃO`.
 
+## [2.9.0] — 24/11/2026
+
+Novo projeto no portfólio: **Org Assessment** (Salesforce × Claude Code).
+
+### Adicionado
+- **Org Assessment** em `salesforce.html`, como Project 01: o que faz, os guardrails aplicados por código, o que há por trás e o link para `csilva86/org-assessment` no GitHub.
+
+### Alterado
+- **DigiLibrary** passa a ser o Project 02, e sobra uma porta lacrada (Project 03).
+- **Home:** o projeto em destaque passa a ser o Org Assessment.
+- **Developments:** o cartão do Claude Code cita o Org Assessment e ganha as etiquetas Subagents e Hooks.
+- Descrição (`meta description`) do `salesforce.html` inclui o Org Assessment.
+
+### Técnico
+- Nenhuma mudança em CSS ou JS: os números `?v=` continuam os mesmos.
+
+## [2.8.0] — 22/11/2026
+
+Fase 2 do diagnóstico de UX: viagens mais rápidas, sem perder a experiência do trem.
+
+### Alterado
+- **Intro mais curta:** o trem chega em 4,5 s (antes 7 s) e o botão "Board the train" aparece em cerca de 6,5 s (antes cerca de 11 s).
+- **Quem já visitou o site** vê o botão "Board the train" logo no início, enquanto o trem ainda está chegando.
+- **Viagem expressa:** a primeira viagem continua completa (aviso de portas, sino, viagem lenta). Da segunda em diante, e em todas as viagens de quem volta ao site, as portas abrem e fecham rápido e a viagem dura cerca de 1 s. Uma troca de estação passou de 8–11 s para cerca de 2 s.
+- **Título de fundo:** o nome grande da estação (ex.: "CONTACT") esmaece quando o cartão abre, para não competir com o texto.
+
+### Adicionado
+- **Pular a viagem:** clicar no vagão ou apertar Enter, Espaço ou Esc durante a viagem leva direto à chegada.
+- **Mudar de ideia no meio do caminho:** clicar em outra estação (ou usar as setas) durante a viagem pula para a chegada e segue direto para a nova estação.
+- **Links por endereço com a página aberta:** trocar o endereço para `#contact`, `#developments` etc. agora move o trem (antes só funcionava ao abrir o link do zero).
+
+### Técnico
+- `wait()` agora pode ser interrompida por `rush()`; `request(i)` enfileira a próxima estação durante uma viagem.
+- O site lembra que o visitante já passou por aqui com `localStorage` (`csllabs-visited`); se o navegador bloquear, tudo funciona como na primeira visita.
+- Classes `#cabin.fast` (portas rápidas) e `#cabin.instant` (portas instantâneas) e `#app.reading` (título de fundo esmaecido) em `style.css`.
+- `?v=` do `style.css`/`app.js` aumentado para 9.
+
+## [2.7.0] — 22/11/2026
+
+Fase 1 do diagnóstico de UX: o site passa a falar com recrutadores e o conteúdo real aparece logo na entrada. O visual e a viagem de trem não mudaram.
+
+### Alterado
+- **Home:** apresenta Carlos Silva como desenvolvedor Salesforce certificado (Platform Developer I, Data Cloud Specialist), destaca o projeto **DigiLibrary** e ganha dois botões: "See the projects" (abre `salesforce.html`) e "Open a channel" (viaja até Contact). O logo grande saiu do cartão (já aparece no topo).
+- **About Us → About:** título no singular ("The mind behind the signal.") e nova linha **Code** com link para o GitHub.
+- **Developments:** texto de abertura reescrito; a chamada do cartão Salesforce virou "See the projects"; textos de Claude Code (conta que o site foi feito assim) e Solidity mais concretos.
+- **Contact:** texto convidando recrutadores e segundo canal (GitHub).
+- **Intro e título da aba:** saem do "soon a new dimension will be revealed" e passam a dizer o que é o site.
+- **Sem JavaScript:** a página mostra quem é, o link dos projetos, o e-mail e o GitHub, em vez de só pedir para ativar o JS.
+- `?v=` do `style.css`/`app.js` aumentado para 8.
+
+### Removido (temporariamente)
+- Estação **Videos** saiu da linha até existir o primeiro vídeo. O bloco continua comentado no `index.html` e em `js/app.js`, com instruções para voltar. A linha agora tem 4 estações e o mapa se ajusta sozinho à quantidade.
+
+### Corrigido
+- Os cartões das estações mostravam barras de rolagem do navegador mesmo sem precisar (1 px de sobra nos cantos decorativos). Agora a rolagem só aparece quando o conteúdo é maior que o cartão.
+
+### Técnico
+- `posOf` calcula a posição das estações a partir do total de estações.
+- Botões com `data-go="<id da estação>"` dentro dos cartões viajam até aquela estação.
+
+## [2.6.0] — 29/10/2026
+
+Conteúdo das estações baseado no currículo do fundador (sem telefone, e-mail pessoal ou lista de empregadores).
+
+### Alterado
+- **Home:** texto de apresentação ("a Salesforce and AI engineering lab led by Carlos Silva").
+- **About Us:** os "Loading…" foram trocados por conteúdo real: quem fundou a CSLLABS e a trajetória (consultoria técnica desde 2008, Salesforce desde 2020, desenvolvedor desde 2022), linhas Founder / Focus / Base e os blocos **Mission** e **Vision**. A barra de carregamento foi removida.
+- **Developments:** o cartão Salesforce ganhou Flows e Data Cloud (e Sales/Service/Data Cloud no texto); nova seção **Certifications** (Platform Developer I 2026, Data Cloud Specialist 2025, AI Specialist 2024, AI Associate 2024, B2C Commerce Developer 2023) e nova seção **Skills**.
+- `meta description` e `og:description` atualizados. `?v=` do `style.css`/`app.js` aumentado para 7.
+
 ## [2.5.0] — 24/10/2026
 
 ### Alterado

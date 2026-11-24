@@ -23,17 +23,36 @@ var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySe
 var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 var mod = function(a, n){ return ((a % n) + n) % n; };
 var clamp = function(v, a, b){ return Math.max(a, Math.min(b, v)); };
-var wait = function(ms){ return new Promise(function(r){ setTimeout(r, reduce ? Math.min(ms, 200) : ms); }); };
+/* wait(ms): a pause that the visitor can cut short (see rush() in TRAVEL) */
+var hurry = false, pending = [];
+var wait = function(ms){
+  return new Promise(function(r){
+    if(hurry) return r();
+    var done = function(){ clearTimeout(id); pending = pending.filter(function(f){ return f !== done; }); r(); };
+    var id = setTimeout(done, reduce ? Math.min(ms, 200) : ms);
+    pending.push(done);
+  });
+};
+
+/* ---------- SPEED ----------
+   The first trip runs the full show (doors, chime, slow travel).
+   After that, and on later visits, the train runs "express": short doors and a quick trip. */
+var VISITED_KEY = 'csllabs-visited';
+var visitedBefore = false;
+try{ visitedBefore = localStorage.getItem(VISITED_KEY) === '1'; }catch(e){}
+var express = visitedBefore;
+function rememberVisit(){ try{ localStorage.setItem(VISITED_KEY, '1'); }catch(e){} }
 
 var STATIONS = [
   {id:'home',         name:'Home',         color:'#5df1ff', no:'Station 01'},
-  {id:'about-us',     name:'About Us',     color:'#b967ff', no:'Station 02'},
+  {id:'about-us',     name:'About',        color:'#b967ff', no:'Station 02'},
   {id:'developments', name:'Developments', color:'#ff5da2', no:'Station 03'},
-  {id:'videos',       name:'Videos',       color:'#ffb454', no:'Station 04'},
-  {id:'contact',      name:'Contact',      color:'#6dffb0', no:'Station 05'}
+  // Videos is off the line until the first video is ready (see the comment in index.html):
+  // {id:'videos',    name:'Videos',       color:'#ffb454', no:'Station 04'},
+  {id:'contact',      name:'Contact',      color:'#6dffb0', no:'Station 04'}
 ];
 var TERMINAL = {name:'CSLLABS', color:'#5df1ff', no:'Central terminal'};
-var posOf = function(i){ return i < 0 ? 0 : 10 + 20*i; };   // % position on the route map
+var posOf = function(i){ return i < 0 ? 0 : 10 + 80 * i / Math.max(1, STATIONS.length - 1); };   // % position on the route map (spreads any number of stations)
 
 /* ---------- logo (file with text fallback) ---------- */
 $$('img[data-logo]').forEach(function(img){
@@ -232,7 +251,7 @@ var Sound = (function(){
 var app = $('#app'), cabin = $('#cabin'), platform = $('#platform'), train = $('#train'), flash = $('#flash');
 var stA = $('#stA'), stB = $('#stB'), curEl = stA;
 var map = $('#map'), mk = $('#mk'), mapFill = $('#mapFill'), led = $('#led'), ledK = $('#ledK'), ledV = $('#ledV');
-var cur = -1, busy = false, doorsOpen = false, phase = 'intro', introAbort = false, stopStatic = null;
+var cur = -1, busy = false, doorsOpen = false, phase = 'intro', introAbort = false, stopStatic = null, queued = null;
 var stopEls = [];
 
 function ledSet(k, v){ ledK.textContent = k; ledV.textContent = v; led.classList.remove('fl'); void led.offsetWidth; led.classList.add('fl'); }
@@ -248,7 +267,7 @@ STATIONS.forEach(function(s, i){
   var b = document.createElement('button');
   b.type = 'button'; b.className = 'stop'; b.style.left = posOf(i) + '%'; b.style.setProperty('--accent', s.color);
   b.setAttribute('aria-label', 'Go to ' + s.name); b.innerHTML = '<span>' + s.name + '</span>';
-  b.addEventListener('click', function(){ go(i); });
+  b.addEventListener('click', function(){ request(i); });
   map.insertBefore(b, mk); stopEls.push(b);
 });
 
@@ -262,6 +281,14 @@ STATIONS.forEach(function(s, i){
       try{ document.execCommand('copy'); ok(); }catch(e){} t.remove(); }
   });
 })();
+
+/* buttons inside the cards that travel to another station: <button data-go="contact"> */
+$$('[data-go]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var id = b.getAttribute('data-go');
+    STATIONS.forEach(function(s, i){ if(s.id === id) request(i); });
+  });
+});
 
 /* "no signal" TV */
 function startStatic(cv){
@@ -279,13 +306,15 @@ function startStatic(cv){
 }
 
 function showCard(i){
+  app.classList.add('reading');
   $$('.card').forEach(function(c){ c.classList.remove('show', 'out'); });
   var c = $$('.card')[i]; c.classList.add('show'); c.scrollTop = 0;
   if(stopStatic){ stopStatic(); stopStatic = null; }
-  if(i === 3) stopStatic = startStatic($('#tvCanvas'));
+  if(c.id === 'c-videos' && $('#tvCanvas')) stopStatic = startStatic($('#tvCanvas'));
   var h = $('h2', c); if(h){ try{ h.focus({preventScroll:true}); }catch(e){} }
 }
 function hideCard(){
+  app.classList.remove('reading');
   var c = $('.card.show'); if(stopStatic){ stopStatic(); stopStatic = null; }
   if(!c) return Promise.resolve();
   c.classList.add('out'); c.classList.remove('show');
@@ -299,14 +328,14 @@ var A = .28;
 var prof = function(t){ return t < A ? t*t/(2*A)/(1-A) : t <= 1-A ? (A/2 + (t-A))/(1-A) : 1 - ((1-t)*(1-t)/(2*A))/(1-A); };
 var vel  = function(t){ return Math.min(1, t/A, (1-t)/A); };
 
-function runTravel(from, to, nextEl, target){
+function runTravel(from, to, nextEl, target, fast){
   return new Promise(function(resolve){
     var dir = Math.sign(to - from), hops = Math.abs(to - from), K = Math.max(2.4 * W, 1800), Ktot = hops * K;
-    var T = reduce ? .8 : 3.4 + 1.1 * (hops - 1), base = scroll, t0 = performance.now(), announced = false;
+    var T = reduce ? .8 : fast ? .9 + .2 * (hops - 1) : 3.4 + 1.1 * (hops - 1), base = scroll, t0 = performance.now(), announced = false;
     var pA = posOf(from), pB = posOf(to);
     nextEl.style.transform = 'translate3d(' + (dir * Ktot) + 'px,0,0)'; nextEl.style.display = 'block';
     function frame(now){
-      var t = clamp((now - t0) / (T * 1000), 0, 1), p = prof(t), v = vel(t);
+      var t = hurry ? 1 : clamp((now - t0) / (T * 1000), 0, 1), p = prof(t), v = vel(t);
       scroll = base + dir * p * Ktot;
       applyWorld(scroll, v);
       curEl.style.transform = 'translate3d(' + (-dir * p * Ktot) + 'px,0,0)';
@@ -322,27 +351,44 @@ function runTravel(from, to, nextEl, target){
   });
 }
 
+/* rush(): the visitor clicked or pressed a key during a trip — skip straight to the arrival */
+function rush(){
+  if(!busy || hurry) return;
+  hurry = true; cabin.classList.add('instant');
+  pending.slice().forEach(function(f){ f(); });
+}
+/* request(i): go to station i; if the train is moving, rush and go there next */
+function request(i){
+  if(phase !== 'cabin') return;
+  if(busy){ queued = i; rush(); return; }
+  go(i);
+}
+
 async function go(to){
   if(busy || to === cur || phase !== 'cabin') return;
   busy = true; map.classList.add('busy'); map.classList.remove('attn');
-  var target = STATIONS[to];
+  var target = STATIONS[to], fast = express;
+  cabin.classList.toggle('fast', fast);
   if(doorsOpen){
-    await hideCard(); await wait(150);
-    Sound.beeps(); ledSet('Attention', 'Doors closing'); await wait(900);
-    setDoors(false); Sound.swish(); await wait(1300);
+    await hideCard();
+    if(!fast){ await wait(150); Sound.beeps(); ledSet('Attention', 'Doors closing'); await wait(900); }
+    setDoors(false); Sound.swish(); await wait(fast ? 380 : 1300);
   }
   var nextEl = curEl === stA ? stB : stA;
   look(nextEl, target);
-  ledSet('Next station', target.name); setMarker(posOf(cur)); await wait(450);
-  await runTravel(cur, to, nextEl, target);
+  ledSet('Next station', target.name); setMarker(posOf(cur)); await wait(fast ? 0 : 450);
+  await runTravel(cur, to, nextEl, target, fast);
   curEl.style.display = 'none'; curEl.style.transform = ''; curEl = nextEl; curEl.style.transform = 'translate3d(0,0,0)';
   cur = to; setAccent(target.color); setCurrentNode(to);
-  Sound.chime(); ledSet('Arrived', target.name); say('Arrived at ' + target.name); await wait(650);
-  Sound.swish(); setDoors(true); await wait(1250);
+  Sound.chime(); ledSet('Arrived', target.name); say('Arrived at ' + target.name); await wait(fast ? 80 : 650);
+  Sound.swish(); setDoors(true); await wait(fast ? 260 : 1250);
   showCard(to); ledSet('Doors open', target.name);
   try{ history.replaceState(null, '', '#' + target.id); }catch(e){}
   document.title = target.name + ' · CSLLABS';
+  express = true; rememberVisit();
+  hurry = false; cabin.classList.remove('instant');
   map.classList.remove('busy'); busy = false;
+  if(queued !== null){ var q = queued; queued = null; if(q !== cur) go(q); }
 }
 
 /* ==================================================================
@@ -357,12 +403,14 @@ function enterCabin(){
 async function intro(){
   var led2 = $('#plLedTxt');
   await wait(600); if(introAbort) return;
-  train.classList.add('arrive'); led2.textContent = 'CSLLABS Express · Arriving'; Sound.arrive(7);
-  await wait(7100); if(introAbort) return;
+  // returning visitors can board right away, while the train is still arriving
+  if(visitedBefore){ $('#tag').classList.add('show'); $('#boardBtn').classList.add('show'); }
+  train.classList.add('arrive'); led2.textContent = 'CSLLABS Express · Arriving'; Sound.arrive(4.5);
+  await wait(4600); if(introAbort) return;
   Sound.chime(); train.classList.add('open'); led2.textContent = 'CSLLABS Express · Boarding'; Sound.swish();
-  await wait(1200); if(introAbort) return;
+  await wait(900); if(introAbort) return;
   $('#tag').classList.add('show');
-  await wait(2200); if(introAbort) return;
+  await wait(700); if(introAbort) return;
   $('#boardBtn').classList.add('show');
 }
 
@@ -402,12 +450,24 @@ $('#sndBtn').addEventListener('click', function(){
   this.setAttribute('aria-label', on ? 'Sound on. Press to turn sound off.' : 'Sound off. Press to turn sound on.');
 });
 window.addEventListener('keydown', function(e){
-  if(phase !== 'cabin' || busy) return;
-  if(e.key === 'ArrowRight') go(clamp(cur + 1, 0, STATIONS.length - 1));
-  if(e.key === 'ArrowLeft') go(clamp(cur - 1, 0, STATIONS.length - 1));
+  if(phase !== 'cabin') return;
+  var base = busy && queued !== null ? queued : cur;
+  if(e.key === 'ArrowRight') request(clamp(base + 1, 0, STATIONS.length - 1));
+  if(e.key === 'ArrowLeft') request(clamp(base - 1, 0, STATIONS.length - 1));
+  if(busy && (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ')) rush();
 });
 var rt = 0;
 window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(buildWorld, 250); });
+
+$('#doorarea').addEventListener('click', function(){ if(busy) rush(); });
+
+/* links by address (#contact, #developments...) also work with the page already open */
+window.addEventListener('hashchange', function(){
+  var id = location.hash.replace('#', ''), k = -1;
+  STATIONS.forEach(function(s, i){ if(s.id === id) k = i; });
+  if(k < 0) return;
+  if(phase === 'cabin') request(k); else openDirect(k);
+});
 
 buildWorld();
 var h0 = location.hash.replace('#', ''), di = -1;

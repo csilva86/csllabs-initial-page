@@ -66,7 +66,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
   background:
     linear-gradient(90deg,transparent 2.4vw,var(--c) 2.4vw 2.55vw,transparent 2.55vw) 0 0/16vw 100% repeat-x,
     linear-gradient(90deg,#06080f 0 2.4vw,transparent 2.4vw) 0 0/16vw 100% repeat-x}
-.st-sign{position:absolute;left:0;right:0;top:38vh;text-align:center;text-transform:uppercase}
+.st-sign{position:absolute;left:0;right:0;top:38vh;text-align:center;text-transform:uppercase;transition:opacity .5s ease}
+/* while a card is open, the big station name behind it fades so it does not compete with the text */
+#app.reading .st-sign{opacity:.12}
 .st-no{display:block;font-family:'Orbitron',sans-serif;font-size:clamp(10px,1.2vw,16px);letter-spacing:.55em;
   color:#d6f4ff;opacity:.7;margin-bottom:.5em}
 .st-name{display:block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(26px,6vw,96px);
@@ -123,7 +125,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .train{position:absolute;bottom:22vh;left:-50vw;height:var(--th);width:calc(170vw + var(--th)*1.9);z-index:2;
   --dw:calc(var(--th)*.26);
   transform:translateX(calc(-1*(120vw + var(--th)*1.9 + 8vw)));will-change:transform}
-.train.arrive{transform:translateX(0);transition:transform 7s cubic-bezier(.16,.5,.22,1)}
+.train.arrive{transform:translateX(0);transition:transform 4.5s cubic-bezier(.16,.5,.22,1)}
 .cars{position:absolute;left:0;top:0;width:170vw;height:100%;border-radius:22px 0 0 22px;
   background:linear-gradient(180deg,#39466e 0%,#1b2340 14%,#131a33 60%,#0a0e20 100%);
   box-shadow:inset 0 2px 0 rgba(180,220,255,.35)}
@@ -162,6 +164,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .dr.l::after{right:0}.dr.r::after{left:0}
 #cabin.open .dr.l{transform:translateX(-100%)}
 #cabin.open .dr.r{transform:translateX(100%)}
+/* express trips (after the first one): quick doors; rushed trips: instant doors */
+#cabin.fast .dr{transition-duration:.38s}
+#cabin.instant .dr{transition-duration:0s}
 #jamb{position:absolute;top:var(--hdr);bottom:12vh;left:var(--wall);right:var(--wall);z-index:6;pointer-events:none;
   border:2px solid var(--accent);border-top:0;box-shadow:0 0 26px -4px var(--accent),inset 0 0 26px -10px var(--accent)}
 .wall{position:absolute;top:var(--hdr);bottom:0;width:var(--wall);z-index:4;
@@ -214,14 +219,14 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 
 /* ============ STATION CONTENT ============ */
 #cardHost{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none;padding:2.5vh 3vw}
-.card{pointer-events:auto;display:none;position:relative;width:min(100%,780px);max-height:100%;overflow:auto;
+.card{pointer-events:auto;display:none;position:relative;width:min(100%,780px);max-height:100%;overflow-x:hidden;overflow-y:auto;
   padding:clamp(18px,3vh,34px) clamp(18px,3vw,38px);border-radius:6px;
   background:linear-gradient(160deg,rgba(9,14,32,.88),rgba(18,10,40,.84));-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
   border:1px solid rgba(93,241,255,.5);border:1px solid color-mix(in srgb,var(--accent) 70%,transparent);
   box-shadow:0 0 44px -8px var(--accent),0 24px 60px rgba(0,0,0,.6);scrollbar-width:thin}
 .card::before,.card::after{content:"";position:absolute;width:18px;height:18px;border:2px solid var(--accent);pointer-events:none}
-.card::before{left:-1px;top:-1px;border-right:0;border-bottom:0}
-.card::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.card::before{left:0;top:0;border-right:0;border-bottom:0}
+.card::after{right:0;bottom:0;border-left:0;border-top:0}
 .card.show{display:block;animation:cardIn .8s cubic-bezier(.2,.8,.2,1) both}
 .card.out{display:block;animation:cardOut .3s ease forwards}
 @keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.97);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
@@ -236,10 +241,38 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .card .logo-big.wm{font-size:clamp(24px,4vw,42px);width:auto}
 .sline{display:flex;justify-content:space-between;gap:1em;padding:.75em 0;border-bottom:1px dashed rgba(255,255,255,.14);
   font-family:'Orbitron',sans-serif;font-size:clamp(11px,1.05vw,13px);letter-spacing:.2em;text-transform:uppercase}
-.sline b{color:var(--accent);font-weight:500;animation:blink 1.6s steps(2) infinite}
+.sline b{color:var(--accent);font-weight:500;text-align:right}
+.mv{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:1.2em}
+.mv h3,.sec{margin:0 0 .5em;font-family:'Orbitron',sans-serif;font-weight:500;font-size:clamp(11px,1.05vw,13px);letter-spacing:.26em;text-transform:uppercase;color:var(--accent)}
+.mv p{margin:0;font-size:clamp(14px,1.3vw,16.5px);line-height:1.45}
+.sec{margin-top:1.5em}
+.certs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0;padding:0;list-style:none}
+.certs li{display:flex;justify-content:space-between;align-items:baseline;gap:.8em;padding:9px 12px;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:4px;
+  background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.certs b{font-family:'Rajdhani','Segoe UI',sans-serif;font-weight:600;font-size:clamp(14px,1.3vw,16px);color:#fff;letter-spacing:.02em}
+.certs span{flex:none;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:.14em;color:var(--accent)}
+.skills{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.skills li{padding:3px 10px;border:1px solid rgba(255,255,255,.22);border-radius:999px;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#cfe3f5}
 .bar{height:6px;margin-top:1.1em;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
 .bar i{display:block;height:100%;width:38%;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scan 2.2s ease-in-out infinite}
 @keyframes scan{from{transform:translateX(-100%)}to{transform:translateX(270%)}}
+.sline a{color:var(--accent);text-decoration:none;text-transform:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 50%,transparent)}
+.sline a:hover{border-bottom-color:var(--accent)}
+.card strong{color:#fff;font-weight:600}
+/* featured project (Home) */
+.feature{margin:0 0 1.1em;padding:.8em 1em;border-left:3px solid #ff5da2;background:rgba(255,93,162,.07)}
+.feature small{display:block;margin-bottom:.35em;font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#ff5da2}
+.card .feature p{margin:0;font-size:clamp(14px,1.35vw,17px)}
+.feature b{color:#fff;font-weight:600}
+/* buttons inside the cards */
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:.9em}
+.btn{display:inline-flex;align-items:center;min-height:44px;padding:0 1.3em;border:1px solid var(--accent);border-radius:3px;background:rgba(93,241,255,.07);
+  font-family:'Orbitron',sans-serif;font-size:clamp(11px,1.1vw,13px);letter-spacing:.14em;text-transform:uppercase;color:#eaffff;text-decoration:none;cursor:pointer;
+  transition-property:background-color,box-shadow,scale;transition-duration:.18s}
+.btn:hover{background:rgba(93,241,255,.22)}
+.btn.primary{background:color-mix(in srgb,var(--accent) 22%,transparent);box-shadow:0 0 22px -6px var(--accent)}
+.btn.primary:hover{background:color-mix(in srgb,var(--accent) 36%,transparent)}
+.btn:active{scale:.97}
 .tech-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:1em}
 .tech{--t:var(--cyan);display:flex;align-items:center;gap:14px;padding:12px;border:1px solid color-mix(in srgb,var(--t) 55%,transparent);
   background:linear-gradient(135deg,color-mix(in srgb,var(--t) 9%,transparent),rgba(255,255,255,.02));
@@ -319,6 +352,7 @@ body.in-cabin #skipBtn{display:none}
   #map .stop:nth-child(even) span{top:calc(100% + 26px)}
   .stop span{font-size:11px;letter-spacing:.08em}
   .tech-grid{grid-template-columns:1fr}
+  .mv,.certs{grid-template-columns:1fr}
   .card{padding:16px}
   #cardHost{padding:2vh 2.5vw}
   .pole,.bench{display:none}
